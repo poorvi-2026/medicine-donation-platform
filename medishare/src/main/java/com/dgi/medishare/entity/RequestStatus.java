@@ -1,5 +1,5 @@
 package com.dgi.medishare.entity;
 
 public enum RequestStatus {
-    PENDING, ACCEPTED, PICKED_UP, DELIVERED, REJECTED
+    PENDING, APPROVED, PICKED_UP, DELIVERED, REJECTED
 }
