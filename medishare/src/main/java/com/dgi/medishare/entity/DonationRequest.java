@@ -21,7 +21,9 @@ public class DonationRequest {
     @JoinColumn(name = "medicine_id")
     private Medicine medicine;
 
-    private Long ngoId; // swap for @ManyToOne Ngo once Rafiya's entity is merged
+    @ManyToOne
+    @JoinColumn(name = "ngo_id")
+    private Ngo ngo;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.PENDING;

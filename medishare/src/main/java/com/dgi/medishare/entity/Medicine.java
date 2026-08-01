@@ -31,4 +31,14 @@ public class Medicine {
     @ManyToOne
     @JoinColumn(name = "donor_id")
     private Donor donor;
+
+	public void setStatus(MedicineStatus available) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Object getExpiryDate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

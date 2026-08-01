@@ -24,7 +24,7 @@ public class MedicineService {
 
     // Expiry validation
     private void validateExpiry(Medicine medicine) {
-        if (medicine.getExpiryDate() == null || !medicine.getExpiryDate().isAfter(LocalDate.now())) {
+        if (medicine.getExpiryDate() == null || !((LocalDate) medicine.getExpiryDate()).isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Cannot list an expired or invalid medicine");
         }
     }
