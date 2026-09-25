@@ -1,6 +1,7 @@
 package com.dgi.medishare.service;
 
 import com.dgi.medishare.entity.Admin;
+import com.dgi.medishare.entity.Donor;
 import com.dgi.medishare.entity.Ngo;
 import com.dgi.medishare.entity.VerificationStatus;
 import com.dgi.medishare.repository.AdminRepository;
@@ -48,6 +49,15 @@ public class AuthService {
             return jwtUtil.generateToken(ngo.getEmail(), ngo.getRole().name());
         }
 
+        com.dgi.medishare.entity.Donor donor = donorRepository.findAll().stream()
+                .filter(d -> d.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
+
+        if (donor != null && passwordEncoder.matches(password, donor.getPassword())) {
+            return jwtUtil.generateToken(donor.getEmail(), donor.getRole().name());
+        }
+
         throw new IllegalArgumentException("Invalid email or password");
     }
 
@@ -68,5 +78,26 @@ public class AuthService {
         ngo.setAddress(request.getAddress());
         ngo.setLicenseNumber(request.getLicenseNumber());
         return ngoRepository.save(ngo);
+    }
+
+
+    @Autowired
+    private com.dgi.medishare.repository.DonorRepository donorRepository;
+    public Donor registerDonor(com.dgi.medishare.dto.RegisterDonorRequest request) {
+
+        boolean emailExists = donorRepository.findAll().stream()
+                .anyMatch(d -> d.getEmail().equals(request.getEmail()));
+
+        if (emailExists) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+
+        Donor donor = new Donor();
+        donor.setName(request.getName());
+        donor.setEmail(request.getEmail());
+        donor.setPassword(passwordEncoder.encode(request.getPassword()));
+        donor.setPhone(request.getPhone());
+        donor.setAddress(request.getAddress());
+        return donorRepository.save(donor);
     }
 }
