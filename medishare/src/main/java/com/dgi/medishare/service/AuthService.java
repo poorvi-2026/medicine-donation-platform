@@ -52,10 +52,18 @@ public class AuthService {
     }
 
     public Ngo registerNgo(com.dgi.medishare.dto.RegisterNgoRequest request) {
+
+        boolean emailExists = ngoRepository.findAll().stream()
+                .anyMatch(n -> n.getEmail().equals(request.getEmail()));
+
+        if (emailExists) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+
         Ngo ngo = new Ngo();
         ngo.setName(request.getName());
         ngo.setEmail(request.getEmail());
-        ngo.setPassword(passwordEncoder.encode(request.getPassword())); // hashed
+        ngo.setPassword(passwordEncoder.encode(request.getPassword()));
         ngo.setPhone(request.getPhone());
         ngo.setAddress(request.getAddress());
         ngo.setLicenseNumber(request.getLicenseNumber());
