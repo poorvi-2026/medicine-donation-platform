@@ -12,7 +12,9 @@ import java.util.Date;
 public class JwtUtil {
 
     // Secret key used to sign the token — keep this safe, never share publicly
-    private final SecretKey secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
+    private final SecretKey secretKey = Keys.hmacShaKeyFor(
+            "medishare-super-secret-key-1234567890-change-this-later".getBytes()
+    );
 
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
