@@ -1,6 +1,8 @@
 package com.dgi.medishare.controller;
 
 import com.dgi.medishare.dto.LoginRequest;
+import com.dgi.medishare.dto.RegisterDonorRequest;
+import com.dgi.medishare.entity.Donor;
 import com.dgi.medishare.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +24,10 @@ public class AuthController {
     @PostMapping("/register/ngo")
     public Ngo registerNgo(@RequestBody RegisterNgoRequest request) {
         return authService.registerNgo(request);
+    }
+
+    @PostMapping("/register/donor")
+    public Donor registerDonor(@RequestBody RegisterDonorRequest request) {
+        return authService.registerDonor(request);
     }
 }
