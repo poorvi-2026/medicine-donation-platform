@@ -2,12 +2,13 @@ package com.dgi.medishare.service;
 
 import com.dgi.medishare.entity.Admin;
 import com.dgi.medishare.entity.Ngo;
+import com.dgi.medishare.entity.VerificationStatus;
 import com.dgi.medishare.repository.AdminRepository;
 import com.dgi.medishare.repository.NgoRepository;
 import com.dgi.medishare.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.dgi.medishare.entity.VerificationStatus;
 
 @Service
 public class AuthService {
@@ -21,26 +22,26 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Returns a JWT token if login is valid, otherwise throws an error
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public String login(String email, String password) {
 
-        // Check Admin first
         Admin admin = adminRepository.findAll().stream()
-                .filter(a -> a.getEmail().equals(email) && a.getPassword().equals(password))
+                .filter(a -> a.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
 
-        if (admin != null) {
+        if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
             return jwtUtil.generateToken(admin.getEmail(), admin.getRole().name());
         }
 
-        // Check Ngo
         Ngo ngo = ngoRepository.findAll().stream()
-                .filter(n -> n.getEmail().equals(email) && n.getPassword().equals(password))
+                .filter(n -> n.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
 
-        if (ngo != null) {
+        if (ngo != null && passwordEncoder.matches(password, ngo.getPassword())) {
             if (ngo.getVerificationStatus() != VerificationStatus.APPROVED) {
                 throw new IllegalArgumentException("NGO account not yet verified by admin");
             }
@@ -48,5 +49,16 @@ public class AuthService {
         }
 
         throw new IllegalArgumentException("Invalid email or password");
+    }
+
+    public Ngo registerNgo(com.dgi.medishare.dto.RegisterNgoRequest request) {
+        Ngo ngo = new Ngo();
+        ngo.setName(request.getName());
+        ngo.setEmail(request.getEmail());
+        ngo.setPassword(passwordEncoder.encode(request.getPassword())); // hashed
+        ngo.setPhone(request.getPhone());
+        ngo.setAddress(request.getAddress());
+        ngo.setLicenseNumber(request.getLicenseNumber());
+        return ngoRepository.save(ngo);
     }
 }
