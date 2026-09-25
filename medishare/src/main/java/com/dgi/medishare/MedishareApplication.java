@@ -10,4 +10,5 @@ public class MedishareApplication {
 		SpringApplication.run(MedishareApplication.class, args);
 	}
 
+
 }
