@@ -4,6 +4,7 @@ import com.dgi.medishare.dto.LoginRequest;
 import com.dgi.medishare.dto.RegisterDonorRequest;
 import com.dgi.medishare.entity.Donor;
 import com.dgi.medishare.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.dgi.medishare.dto.RegisterNgoRequest;
@@ -22,12 +23,12 @@ public class AuthController {
     }
 
     @PostMapping("/register/ngo")
-    public Ngo registerNgo(@RequestBody RegisterNgoRequest request) {
+    public Ngo registerNgo(@Valid  @RequestBody RegisterNgoRequest request) {
         return authService.registerNgo(request);
     }
 
     @PostMapping("/register/donor")
-    public Donor registerDonor(@RequestBody RegisterDonorRequest request) {
+    public Donor registerDonor(@Valid @RequestBody RegisterDonorRequest request) {
         return authService.registerDonor(request);
     }
 }
