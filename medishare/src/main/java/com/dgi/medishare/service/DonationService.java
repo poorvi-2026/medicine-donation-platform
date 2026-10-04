@@ -75,16 +75,18 @@ public class DonationService {
                 .orElseThrow(() -> new IllegalArgumentException("Request not found"));
 
         request.setStatus(status);
+        donationRequestRepository.save(request);
 
         if (status == RequestStatus.DELIVERED) {
-            Medicine medicine = request.getMedicine();
+            Long medicineId = request.getMedicine().getId();
+            Medicine medicine = medicineRepository.findById(medicineId)
+                    .orElseThrow(() -> new IllegalArgumentException("Medicine not found"));
             medicine.setStatus(MedicineStatus.DONATED);
             medicineRepository.save(medicine);
         }
 
-        return donationRequestRepository.save(request);
+        return request;
     }
-
     public List<DonationRequest> getRequestsByNgo(Long ngoId) {
         return donationRequestRepository.findAll().stream()
                 .filter(r -> r.getNgo().getId().equals(ngoId))
