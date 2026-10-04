@@ -44,4 +44,10 @@ public class DonationController {
     public List<DonationRequest> getRequestsByNgo(@PathVariable Long ngoId) {
         return donationService.getRequestsByNgo(ngoId);
     }
+
+    @DeleteMapping("/{id}/cancel")
+    public String cancelRequest(@PathVariable Long id) {
+        donationService.cancelRequest(id);
+        return "Request cancelled successfully";
+    }
 }

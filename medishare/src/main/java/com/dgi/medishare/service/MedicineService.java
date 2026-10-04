@@ -36,4 +36,31 @@ public class MedicineService {
     public List<Medicine> getMedicinesByDonor(Long donorId) {
         return medicineRepository.findByDonorId(donorId);
     }
+
+    public Medicine updateMedicine(Long id, Medicine updatedData) {
+        Medicine medicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Medicine not found"));
+
+        if (medicine.getStatus() != MedicineStatus.AVAILABLE) {
+            throw new IllegalArgumentException("Cannot edit a medicine that is already requested or donated");
+        }
+
+        medicine.setName(updatedData.getName());
+        medicine.setCategory(updatedData.getCategory());
+        medicine.setQuantity(updatedData.getQuantity());
+        medicine.setExpiryDate(updatedData.getExpiryDate());
+
+        return medicineRepository.save(medicine);
+    }
+
+    public void deleteMedicine(Long id) {
+        Medicine medicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Medicine not found"));
+
+        if (medicine.getStatus() != MedicineStatus.AVAILABLE) {
+            throw new IllegalArgumentException("Cannot delete a medicine that is already requested or donated");
+        }
+
+        medicineRepository.delete(medicine);
+    }
 }

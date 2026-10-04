@@ -92,4 +92,19 @@ public class DonationService {
                 .filter(r -> r.getNgo().getId().equals(ngoId))
                 .toList();
     }
+
+    public void cancelRequest(Long requestId) {
+        DonationRequest request = donationRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
+
+        if (request.getStatus() != RequestStatus.PENDING) {
+            throw new IllegalArgumentException("Cannot cancel a request that is already processed");
+        }
+
+        Medicine medicine = request.getMedicine();
+        medicine.setStatus(MedicineStatus.AVAILABLE);
+        medicineRepository.save(medicine);
+
+        donationRequestRepository.delete(request);
+    }
 }
