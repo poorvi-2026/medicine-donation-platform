@@ -28,4 +28,15 @@ public class MedicineController {
     public List<Medicine> getMedicinesByDonor(@PathVariable Long donorId) {
         return medicineService.getMedicinesByDonor(donorId);
     }
+
+    @PutMapping("/{id}")
+    public Medicine updateMedicine(@PathVariable Long id, @RequestBody Medicine updatedData) {
+        return medicineService.updateMedicine(id, updatedData);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteMedicine(@PathVariable Long id) {
+        medicineService.deleteMedicine(id);
+        return "Medicine deleted successfully";
+    }
 }
