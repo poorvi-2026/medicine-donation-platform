@@ -17,8 +17,9 @@ public class DonationController {
 
     // NGO requests a medicine
     @PostMapping("/request")
-    public DonationRequest createRequest(@RequestParam Long medicineId, @RequestParam Long ngoId) {
-        return donationService.createRequest(medicineId, ngoId);
+    public DonationRequest createRequest(@RequestParam Long medicineId,
+                                         org.springframework.security.core.Authentication auth) {
+        return donationService.createRequestByEmail(medicineId, auth.getName());
     }
 
     // Donor accepts the request

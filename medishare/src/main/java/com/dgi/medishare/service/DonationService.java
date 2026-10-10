@@ -107,4 +107,13 @@ public class DonationService {
 
         donationRequestRepository.delete(request);
     }
+
+    @Autowired
+    private NgoRepository ngoRepo;
+
+    public DonationRequest createRequestByEmail(Long medicineId, String email) {
+        Ngo ngo = ngoRepo.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("NGO not found for this login"));
+        return createRequest(medicineId, ngo.getId());
+    }
 }

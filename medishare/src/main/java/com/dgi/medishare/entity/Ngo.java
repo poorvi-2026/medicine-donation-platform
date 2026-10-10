@@ -16,6 +16,7 @@ public class Ngo {
     private String name;
     @Column(unique = true)
     private String email;
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String phone;
     private String address;

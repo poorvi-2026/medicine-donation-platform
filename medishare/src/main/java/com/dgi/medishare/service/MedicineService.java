@@ -63,4 +63,13 @@ public class MedicineService {
 
         medicineRepository.delete(medicine);
     }
+
+    @org.springframework.scheduling.annotation.Scheduled(cron = "0 0 0 * * *")
+    public void markExpiredMedicines() {
+        medicineRepository.findAll().stream()
+                .filter(m -> m.getStatus() == MedicineStatus.AVAILABLE
+                        && m.getExpiryDate() != null
+                        && m.getExpiryDate().isBefore(LocalDate.now()))
+                .forEach(m -> { m.setStatus(MedicineStatus.EXPIRED); medicineRepository.save(m); });
+    }
 }
